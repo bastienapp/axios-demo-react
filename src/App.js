@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import axios from 'axios';
+import Character from './components/Character';
 
 function App() {
+  const [characters, setCharacters] = useState([]);
+
+  const loadCharacters = () => {
+    axios
+      .get('http://hp-api.herokuapp.com/api/characters/students')
+      .then((response) => {
+        setCharacters(response.data);
+      });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <button type='button' onClick={loadCharacters}>
+        Load characters
+      </button>
+      {characters.map((character) => {
+        return (
+          <Character
+            name={character.name}
+            house={character.house}
+            yearOfBirth={character.yearOfBirth}
+          />
+        );
+      })}
     </div>
   );
 }
